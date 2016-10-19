@@ -58,7 +58,7 @@ var musicBackground;
 //var enemy = document.createElement("img");
 //enemy.src = "enemy1.png";
 
-var enemy = new Enemy();
+var enemy = new Enemy1
 
 var METER = TILE;
 var GRAVITY = METER * 9.8 *6;
@@ -90,7 +90,7 @@ var keyboard = new Keyboard();
 
 var enemies = [];
 
-//Enemy1 inprogress
+/*//Enemy1 inprogress
 
 //Enemy Layer costant
 var ENEMY_MAXDX = METER * 5;
@@ -108,7 +108,7 @@ var LAYER_BACKGOUND = 0;
 
 var LAYER_OBJECT_ENEMIES = 3;
 var LAYER_OBJECT_TRIGGERS = 4;
-//................................By Rene
+//................................By Rene*/
 
 
 
@@ -141,7 +141,7 @@ function initialize()
 		}
 	}
 	
-	var enemy = new Enemy(32,32)
+	var enemy = new Enemy1(32,32)
 	enemies.push(enemy);
 
 	musicBackground = new Howl(
