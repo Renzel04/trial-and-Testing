@@ -58,7 +58,7 @@ var musicBackground;
 //var enemy = document.createElement("img");
 //enemy.src = "enemy1.png";
 
-var enemy = new Enemy();
+var enemy = new Enemy(32,34);
 
 var METER = TILE;
 var GRAVITY = METER * 9.8 *6;
@@ -78,6 +78,9 @@ var fpsTime = 0;
 var hero = document.createElement("img");
 hero.src = "hero.png";
 
+var Enemy = document.createElement("img");
+Enemy.src = "enemy1.png";
+
 //UI ASSETS - Steph
 var livesIcon = document.createElement("img")
 livesIcon.src = "heart.png"
@@ -90,16 +93,10 @@ var keyboard = new Keyboard();
 
 var enemies = [];
 
-//Enemy1 inprogress
-
-//Enemy Layer costant
 var ENEMY_MAXDX = METER * 5;
 var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 
-var enemies = [];
 
-var ENEMY_MAXDX = METER * 5;
-var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 var enemies = [];
 var LAYER_COUNT = 1;
 var LAYER_BACKGOUND = 0;
@@ -141,7 +138,7 @@ function initialize()
 		}
 	}
 	
-	var enemy = new Enemy(32,32)
+	//var enemy = new Enemy(32,32)
 	enemies.push(enemy);
 
 	musicBackground = new Howl(
@@ -225,6 +222,11 @@ function drawMapLayer(layer)
 		console.log("Draw complete");
 }
 
+function placeOnTile(tile)
+{
+	return Math.floor(tile * TILE);
+}
+
 var splashTimer = 5;
 function runSplash(deltaTime) 
 {
@@ -259,18 +261,6 @@ function runGame(deltaTime)
 	player.update(deltaTime);
 	player.draw();
 
-	enemy.update(deltaTime);
-	enemy.draw();
-
-	/*musicBackground = new Howl(
-		{
-			urls: ["Root.mp3"],
-			loop: true,
-			buffer: true,
-			volume: 0.1
-		} );
-
-	*/
 	drawMapLayer(0);
 	/*score += deltaTime;*/
 	for (var i = 0; i < enemies.length; i++) 
@@ -286,8 +276,8 @@ function runGameOver(deltaTime)
 	console.log("LOSE STATE");
 
 	context.fillStyle = "#000";
-	context.font = "24px Arial";
-	context.fillText("TOO BAD!", 200, 240);
+	context.font = "70px Impact";
+	context.fillText("TOO BAD!", 170, 240);
 }
 
 function runWIN(deltaTime) 
@@ -295,8 +285,8 @@ function runWIN(deltaTime)
 	console.log("WIN STATE");
 
 	context.fillStyle = "#000";
-	context.font = "24px Arial";
-	context.fillText("YOU WIN!", 200, 240);
+	context.font = "70px Impact";
+	context.fillText("YOU WIN!", 170, 240);
 }
 
 function DrawUI()
@@ -324,6 +314,18 @@ function DrawUI()
 
 }
 
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2) 
+{ 
+	if(y2 + h2 < y1 || 
+		x2 + w2 < x1 || 
+		x2 > x1 + w1 || 
+		y2 > y1 + h1) 
+	{ 
+		return false; 
+	} 
+	return true; 
+}
+
 initialize();
 
 function run()
@@ -332,6 +334,24 @@ function run()
 	context.fillStyle = "#a9ffa2";		
 	context.fillRect(0, 0, canvas.width, canvas.height);
 	
+	if (enemy.isDead == false) 
+	{ 
+		var hit = intersects(
+			player.x, player.y, 
+			player.width, player.height, 
+			enemy.x, enemy.y, 
+			enemy.width, enemy.height); 
+		if (hit == true) 
+		{ 
+			player.isDead = true; 
+			enemy.isDead = false; 
+		} 
+	} 
+	if (player.x < 0 || player.x > SCREEN_WIDTH || player.y < 0 || player.y > SCREEN_HEIGHT) 
+	{ 
+		player.isDead = true; 
+	}
+
 	var deltaTime = getDeltaTime();
 	
 	switch (gameState) 
